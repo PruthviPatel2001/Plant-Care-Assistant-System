@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="/Users/pruthvipatel/Documents/NorthEastern University/Academics Related/Quater-1/ITC6000 - DBMS/Final Project DB/plant_care_assistant_system_db.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="1"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="3843"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,19:mainFertilizerRecommend"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="FertilizerRecommend" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="60"/><column index="2" value="130"/><column index="3" value="71"/><column index="4" value="34"/><column index="5" value="86"/><column index="6" value="87"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">-- Creating PestDiseaseRecord Table
+CREATE TABLE PestDiseaseRecord (
+    Issue_ID VARCHAR(30) PRIMARY KEY,
+    Timestamp DATETIME,
+    Issue_Type TEXT,
+    Issue_Desc TEXT,
+    Treatment_Recommend TEXT
+);
+
+-- Creating FertilizerRecommend Table
+CREATE TABLE FertilizerRecommend (
+    Fertilizer_ID VARCHAR(30) PRIMARY KEY,
+	Name TEXT, 
+    Fertilizer_Type VARCHAR(255),
+	Price INTEGER,
+	Nutrient_Comp VARCHAR(255),
+    Freq_Recommend INTEGER
+ 
+);
+
+-- Creating  HarvestRecommend Table
+CREATE TABLE HarvestRecommend (
+    Recommendation_ID VARCHAR(30) PRIMARY KEY,
+    Optimal_Harvest_Period DATE,
+    Crop_Conditions TEXT,
+    Storage_Recommendations TEXT
+);
+
+-- Creating HarvestRecommend  Table
+CREATE TABLE PlantSensorRead (
+    SensorRead_ID VARCHAR(30) PRIMARY KEY,
+    Timestamp DATETIME,
+    Light_Intensity INTEGER,
+    Temperature DECIMAL,
+    Soil_Moisture DECIMAL
+);
+
+-- Creating HarvestRecommend Table
+CREATE TABLE WateringInstruc (
+    Watering_ID VARCHAR(30) PRIMARY KEY,
+    FK_SensorRead_ID VARCHAR(30), 
+    Frequency INTEGER,
+    Amount DECIMAL,
+    Watering_Time DATETIME,
+    Special_Instruc TEXT,
+    FOREIGN KEY (FK_SensorRead_ID) REFERENCES PlantSensorRead(SensorRead_ID)
+);
+
+-- Creating  HarvestRecommend Table
+CREATE TABLE UserDetail (
+    User_ID VARCHAR(30)PRIMARY KEY,
+    Name TEXT ,
+    Contact_Details VARCHAR(30),
+    Email VARCHAR(255),
+	Gender VARCHAR(10),
+	Age INTEGER, 
+	Address VARCHAR(255),
+	User_Type TEXT
+);
+
+-- Creating HarvestRecommend Table
+CREATE TABLE PlantProfile (
+    Plant_ID VARCHAR(30) PRIMARY KEY,
+    Name VARCHAR(30),
+    Species TEXT,
+    Growth_Stage TEXT,
+    FK_SensorRead_ID VARCHAR(30),
+    FK_Watering_ID VARCHAR(30),
+    FK_Issue_ID VARCHAR(30),
+    FK_FertilizerRec_ID VARCHAR(30),
+    FK_HarvestRec_ID VARCHAR(30),
+	FK_User_ID VARCHAR(30),
+    FOREIGN KEY (FK_SensorRead_ID) REFERENCES PlantSensorRead(SensorRead_ID),
+    FOREIGN KEY (FK_Watering_ID) REFERENCES WateringInstruc(Watering_ID),
+    FOREIGN KEY (FK_Issue_ID) REFERENCES PestDiseaseRecord(Issue_ID),
+    FOREIGN KEY (FK_FertilizerRec_ID) REFERENCES FertilizerRecommend(Fertilizer_ID),
+    FOREIGN KEY (FK_HarvestRec_ID) REFERENCES HarvestRecommend(Recommendation_ID),
+	FOREIGN KEY (FK_User_ID) REFERENCES UserDetail(User_ID)
+);
+
+-- Instering Values in Database --
+
+-- In PestDiseaseRecord TABLE
+INSERT INTO PestDiseaseRecord (Issue_ID, Timestamp, Issue_Type, Issue_Desc, Treatment_Recommend)
+VALUES
+  ('PDR01', '2022-12-01 10:00:00', 'Disease', 'Plant has fungal infection', 'Apply fungicide.'),
+  ('PDR02', '2022-12-02 12:30:00', 'Pest', 'Insect infestation on leaves', 'Use insecticidal soap.'),
+  ('PDR03', '2022-12-03 14:45:00', 'Disease', 'Yellowing of leaves', 'Check for nutrient deficiency.'),
+  ('PDR04', '2022-12-04 16:20:00', 'Pest', 'Aphid attack on stems', 'Introduce natural predators.'),
+  ('PDR05', '2022-12-05 09:15:00', 'Disease', 'Curling of leaves', 'Apply anti-fungal spray.'),
+  ('PDR06', '2022-12-06 11:30:00', 'Pest', 'Spider mites on leaves', 'Use miticide.'),
+  ('PDR07', '2022-12-07 13:40:00', 'Disease', 'Rust spots on leaves', 'Remove affected leaves and treat.'),
+  ('PDR08', '2022-12-08 15:10:00', 'Pest', 'Caterpillar infestation', 'Apply biological insecticide.'),
+  ('PDR09', '2022-12-09 08:45:00', 'Disease', 'Wilting of plant', 'Check for root rot and adjust watering.'),
+  ('PDR10', '2022-12-10 10:55:00', 'Pest', 'Scale insects on stems', 'Use horticultural oil for control.');
+
+-- In FertilizerRecommend Table
+INSERT INTO FertilizerRecommend (Fertilizer_ID, Name, Fertilizer_Type, Price, Nutrient_Comp, Freq_Recommend)
+VALUES
+  ('FR01', 'All-Purpose Fertilizer', 'General', 15.99, 'Balanced Mix', 14),
+  ('FR02', 'Blossom Booster', 'Flower', 19.99, 'Flowering Boost', 21),
+  ('FR03', 'Vegetable &amp; Herb Fertilizer', 'Vegetable', 17.99, 'Balanced Mix', 18),
+  ('FR04', 'Citrus Fertilizer', 'Citrus', 22.99, 'Balanced Mix', 28),
+  ('FR05', 'Rose Plant Food', 'Rose', 18.99, 'Flowering Boost', 21),
+  ('FR06', 'Indoor Plant Fertilizer', 'Indoor', 12.99, 'Balanced Mix', 14),
+  ('FR07', 'Orchid Fertilizer', 'Orchid', 24.99, 'Balanced Mix', 30),
+  ('FR08', 'Tomato &amp; Vegetable Fertilizer', 'Vegetable', 16.99, 'Balanced Mix', 20),
+  ('FR09', 'Lawn Fertilizer', 'Lawn', 29.99, 'Vegetative Growth', 45),
+  ('FR10', 'Palm Tree Fertilizer', 'Palm', 26.99, 'Balanced Mix', 35);
+
+ -- In HarvestRecommend Table
+ INSERT INTO HarvestRecommend (Recommendation_ID, Optimal_Harvest_Period, Crop_Conditions, Storage_Recommendations)
+VALUES
+  ('HR01', '2023-05-03', 'Excellent', ' Store in a cool, dry place.'),
+  ('HR02', '2023-02-18', 'Good', 'Store in a cool location.'),
+  ('HR03', '2023-02-20', 'Fair', 'Store in a controlled environment to maintain freshness.'),
+  ('HR04', '2023-03-13', 'Poor', ' Use or process immediately.'),
+  ('HR05', '2023-03-09', 'Excellent', 'Store in a cool, dry place.');
+
+-- In PlantSensorRead Table
+ INSERT INTO PlantSensorRead (SensorRead_ID, Timestamp, Light_Intensity, Temperature, Soil_Moisture)
+VALUES
+  ('PSR01', '2022-12-01 10:00:00', 4000, 33, 60.0),
+  ('PSR02', '2022-12-02 12:30:00', 5000, 24, 55.5),
+  ('PSR03', '2022-12-03 14:45:00', 6000, 22, 65.0),
+  ('PSR04', '2022-12-04 16:20:00', 5000, 35, 50.5),
+  ('PSR05', '2022-12-05 09:15:00', 4000, 27, 45.0),
+  ('PSR06', '2022-12-06 11:30:00', 3000, 23, 70.5),
+  ('PSR07', '2022-12-07 13:40:00', 2000, 25, 60.0),
+  ('PSR08', '2022-12-08 15:10:00', 1000, 24, 55.5),
+  ('PSR09', '2022-12-09 08:45:00', 4000, 22, 65.0),
+  ('PSR10', '2022-12-10 10:55:00', 5000, 32, 50.5);
+  
+ -- In WateringInstruc Table
+INSERT INTO WateringInstruc (Watering_ID, FK_SensorRead_ID, Frequency, Amount, watering_Time, Special_Instruc)
+VALUES
+  ('WI01', 'PSR01', 2, 150.0, '2022-12-01 10:00:00', 'Deep watering near the roots.'),
+  ('WI02', 'PSR02', 3, 200.0, '2022-12-02 12:30:00', 'Even watering for better absorption.'),
+  ('WI03', 'PSR03', 2, 180.0, '2022-12-03 14:45:00', 'Morning watering to avoid fungal growth.'),
+  ('WI04', 'PSR04', 1, 120.0, '2022-12-04 16:20:00', 'Adjust watering based on soil moisture levels.'),
+  ('WI05', 'PSR05', 2, 160.0, '2022-12-05 09:15:00', 'Deep watering near the roots.'),
+  ('WI06', 'PSR06', 3, 200.0, '2022-12-06 11:30:00', 'Even watering for better absorption.'),
+  ('WI07', 'PSR07', 2, 180.0, '2022-12-07 13:40:00', 'Morning watering to avoid fungal growth.'),
+  ('WI08', 'PSR08', 1, 120.0, '2022-12-08 15:10:00', 'Adjust watering based on soil moisture levels.'),
+  ('WI09', 'PSR09', 2, 160.0, '2022-12-09 08:45:00', 'Deep watering near the roots.'),
+  ('WI10', 'PSR10', 3, 200.0, '2022-12-10 10:55:00', 'Even watering for better absorption.');
+  
+ -- In UserDetail Table
+INSERT INTO UserDetail (User_ID, Name, Contact_Details, Email, Gender, Age, Address, User_Type)
+VALUES
+  ('U01', 'Dinesh', '9874940393', 'dinesh@example.com', 'Male', 40, 'India', 'Farmer'),
+  ('U02', 'Jignesh', '9375738920', 'jignesh@example.com', 'Male', 36, 'India', 'Farmer'),
+  ('U03', 'Rajesh', '7846578590', 'rajesh@example.com', 'Male', 42, 'Indiat', 'Farmer'),
+  ('U04', 'Kartik', '8476356478', 'kartik@example.com', 'Male', 38, 'India', 'Gardener'),
+  ('U05', 'Kamlesh', '9846374893', 'kamlesh@example.com', 'Male', 29, 'India', 'Gardener'),
+  ('U06', 'Rita', '9847465758', 'Rita@example.com', 'Female', 50, 'India', 'Botanist');
+  
+  
+ -- In PlantProfile TABLE
+
+INSERT INTO PlantProfile (Plant_ID, Name, Species, Growth_Stage, FK_SensorRead_ID, FK_Watering_ID, FK_Issue_ID, FK_FertilizerRec_ID, FK_HarvestRec_ID, FK_User_ID)
+VALUES
+  ('PP01', 'Wheat', 'Triticum aestivum', 'Seedling', 'PSR01', 'WI01', 'PDR01', 'FR01', 'HR01', 'U01'),
+   ('PP02', 'Rice', 'Oryza sativa', 'Seedling', 'PSR02', 'WI02', 'PDR02', 'FR02', 'HR02', 'U01'),
+  ('PP03', 'Corn', 'Zea mays', 'Seedling', 'PSR03', 'WI03', 'PDR03', 'FR03', 'HR03', 'U02'),
+  ('PP04', 'Tomato', 'Solanum lycopersicum', 'Fruiting', 'PSR04', 'WI04', 'PDR04', 'FR04', 'HR04', 'U02'),
+  ('PP05', 'Potato', 'Solanum tuberosum', 'Mature', 'PSR05', 'WI05', 'PDR05', 'FR05', 'HR05', 'U03'),
+  ('PP06', 'Carrot', 'Daucus carota', 'Harvestable', 'PSR06', 'WI06', 'PDR06', 'FR06', NULL, 'U03'),
+  ('PP07', 'Sunflower', 'Helianthus annuus', 'Blooming', 'PSR07', 'WI07', 'PDR07', 'FR07', NULL, 'U04'),
+  ('PP08', 'Rose', 'Rosa', 'Blooming', 'PSR08', 'WI08', 'PDR08', 'FR08', NULL, 'U04'),
+  ('PP09', 'Soybean', 'Glycine max', 'Seedling', 'PSR09', 'WI09', 'PDR09', 'FR09', NULL, 'U05'),
+  ('PP10', 'Apple Tree', 'Malus domestica', 'Fruiting', 'PSR10', 'WI10', 'PDR10', 'FR10', NULL, 'U05');
+
+
+
+
+-- Assuming its 12:25 PM on December 2, 2022, the system  need to identifies all users who have a watering scheduled at 12:30 PM to notify 5 min before  using notification service. 
+
+SELECT
+    UD.User_ID,
+    UD.Name ,
+    UD.Contact_Details,
+    PP.Name AS PlantName,
+    WI.watering_Time AS NextWateringTime,
+	WI.Amount As Watering_Amount,
+	WI.Special_Instruc,
+	PSR.Soil_Moisture
+FROM
+    UserDetail UD
+JOIN
+    PlantProfile PP ON UD.User_ID = PP.FK_User_ID
+JOIN
+    WateringInstruc WI ON PP.FK_Watering_ID = WI.Watering_ID
+JOIN 
+     PlantSensorRead PSR ON WI.FK_SensorRead_ID = PSR.SensorRead_ID
+WHERE
+     WI.watering_Time = '2022-12-02 12:30:00';
+ 
+
+-- Alerting user when there light intemsity is 5000 or above and temp is more than 30 degree.
+SELECT
+    UD.User_ID,
+    UD.Name AS UserName,
+    PP.Plant_ID,
+    PP.Name AS PlantName,
+    PSR.Timestamp,
+    PSR.Light_Intensity,
+    PSR.Temperature
+FROM
+    UserDetail UD
+JOIN
+    PlantProfile PP ON UD.User_ID = PP.FK_User_ID
+JOIN
+    PlantSensorRead PSR ON PP.FK_SensorRead_ID = PSR.SensorRead_ID
+WHERE
+    PSR.Light_Intensity &gt;= 5000
+    AND PSR.Temperature &gt; 30;
+
+-- Assuming User U01 want to check senor reading of his/her plants.
+SELECT
+    UD.User_ID,
+    UD.Name AS UserName,
+    PP.Plant_ID,
+    PP.Name AS PlantName,
+    PSR.Timestamp,
+    PSR.Light_Intensity,
+    PSR.Temperature,
+    PSR.Soil_Moisture
+FROM
+    UserDetail UD
+JOIN
+    PlantProfile PP ON UD.User_ID = PP.FK_User_ID
+JOIN
+    PlantSensorRead PSR ON PP.FK_SensorRead_ID = PSR.SensorRead_ID
+WHERE
+    UD.User_ID=&quot;U01&quot;;
+	
+-- Assuming that the user with id u02 has created pesetand diease records and that the treatment recommendation is now ready, it is time to present the contents of the treatment recommendation with harvest period time so that the user can take quick action.
+SELECT
+    ud.User_ID,
+    ud.Name AS User_Name,
+    ud.Email AS User_Email,
+    ud.User_Type,
+	 pp.Plant_ID,
+    pp.Name AS Plant_Name,
+    pp.Species,
+    pp.Growth_Stage,
+    pdr.Issue_ID,
+    pdr.Timestamp,
+    pdr.Issue_Type,
+    pdr.Issue_Desc,
+    pdr.Treatment_Recommend,
+    hr.Optimal_Harvest_Period
+FROM
+    PestDiseaseRecord pdr
+JOIN
+    PlantProfile pp ON pdr.Issue_ID = pp.FK_Issue_ID
+JOIN
+    UserDetail ud ON pp.FK_User_ID = ud.User_ID
+LEFT JOIN
+    HarvestRecommend hr ON pp.FK_HarvestRec_ID = hr.Recommendation_ID
+WHERE
+    (pdr.Issue_Type = 'Disease' OR pdr.Issue_Type = 'Pest')
+	AND UD.User_ID = 'U02'
+    AND hr.Optimal_Harvest_Period IS NOT NULL;
+
+
+
+	
+	
+--  The case where a botanist/researcher is looking for information on farmers who are growing wheat and have their next harvest planned for the nearest possible period.
+SELECT
+    UD.User_ID,
+    UD.Name AS UserName,
+	UD.Contact_Details,
+	UD.Address,
+	UD.User_Type,
+    PP.Plant_ID,
+    PP.Name AS PlantName,
+    HR.Recommendation_ID,
+    HR.Optimal_Harvest_Period,
+    HR.Crop_Conditions
+FROM
+    UserDetail UD
+JOIN
+    PlantProfile PP ON UD.User_ID = PP.FK_User_ID
+JOIN
+    HarvestRecommend HR ON PP.FK_HarvestRec_ID = HR.Recommendation_ID
+WHERE
+    UD.User_Type = 'Farmer'
+   AND PP.Name = 'Wheat'
+	AND UD.Address ='India'
+ORDER BY
+    HR.Optimal_Harvest_Period ASC;
+	
+-- DataBase Analysis
+
+-- Counts growth stage considering every plants in database.
+SELECT
+    Growth_Stage,
+    COUNT(*) AS StageCount
+FROM
+    PlantProfile
+GROUP BY
+    Growth_Stage
+ORDER BY
+    StageCount DESC;
+
+-- To check number of plants each user have.	
+SELECT
+    ud.User_ID,
+    ud.Name AS User_Name,
+    COUNT(pp.Plant_ID) AS PlantCount
+FROM
+    UserDetail ud
+LEFT JOIN
+    PlantProfile pp ON ud.User_ID = pp.FK_User_ID
+GROUP BY
+    ud.User_ID, ud.Name;
+
+-- Calculate average price of several categories of fertilizer type.	
+SELECT
+    Fertilizer_Type,
+    avg(Price) AS AvgPrice
+FROM
+    FertilizerRecommend
+GROUP BY
+    Fertilizer_Type
+ORDER BY
+    AvgPrice DESC
+
+
+
+
+
+</sql><current_tab id="0"/></tab_sql></sqlb_project>
